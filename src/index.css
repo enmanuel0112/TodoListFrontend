@@ -1,7 +1,24 @@
 @import "tailwindcss"; 
 
+@theme{
+    
+    --color-bgApp: #f0f3e8;
+    --color-cardTask: #fdfdf6;
+    --color-lightShadow: #EDEFE5;
+    --color-mainText: #333333;
+    --color-secondaryText: #666666;
+    --color-green: #6b936d;
+}
 
-
+.input{
+    @apply border border-gray-300 rounded-[12px] px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent;
+}
+.btn{
+   @apply w-[300px] bg-white text-[#333333] 
+            font-semibold cursor-pointer text-2xl py-3 px-6 
+            rounded-[12px] shadow-lg hover:text-[#6B936D] hover:scale-105 hover:shadow-xl 
+            transition-all duration-300 ease-in-out
+}
  body {
     font-family: 'Montserrat', sans-serif;
 } 
