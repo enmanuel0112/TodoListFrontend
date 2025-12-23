@@ -5,7 +5,9 @@ export async function apiFect(
   endpoint: string,
   options: RequestInit = {}
 ): Promise<{ user?: object }> {
-  const response = await fetch(`${Base_URL}/${endpoint}`, {
+
+  try {
+    const response = await fetch(`${Base_URL}/${endpoint}`, {
     ...options,
     headers: {
       "Content-Type": "application/json",
@@ -25,4 +27,9 @@ export async function apiFect(
   }
   const data = await response.json();
   return data;
+  } catch (error) {
+    console.error("API Fetch Error:", error);
+    throw error;
+  }
+  
 }

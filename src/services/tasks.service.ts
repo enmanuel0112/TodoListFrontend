@@ -5,10 +5,15 @@ type Task = {
   createdAt: string;
   updatedAt: string;
   isCompleted: boolean;
-  user?: number;
+  user: userTask;
 };
 interface taskDelete {
   message: string;
+}
+interface userTask {
+  id: number;
+  userName: string;
+  email: string;
 }
 type CheckTask = {
   isCompleted: boolean;
@@ -20,17 +25,16 @@ export async function createTask(content: string) {
     body: JSON.stringify({ content }),
   });
 
-  return create ;
+  return create;
 }
 
 export async function getTask() {
-  const task = await apiFect("task/me", { method: "GET" });
-
+  const task = await apiFect("task/?page=1&limit=5", { method: "GET" });
   return task as Task[];
 }
 
 export async function checkTask(taskId: number, isCompleted: boolean) {
-  const task = await apiFect(`task/update/${taskId}`, {
+  const task = await apiFect(`task/edit/${taskId}`, {
     method: "PUT",
     body: JSON.stringify({ isCompleted }),
   });
@@ -38,11 +42,8 @@ export async function checkTask(taskId: number, isCompleted: boolean) {
   return task as CheckTask;
 }
 
-export async function updateTask(
-  taskId: number,
-  content: string,
-) {
-  const task = await apiFect(`task/update/${taskId}`, {
+export async function updateTask(taskId: number, content: string) {
+  const task = await apiFect(`task/${taskId}`, {
     method: "PUT",
     body: JSON.stringify({ content }),
   });
@@ -50,14 +51,10 @@ export async function updateTask(
   return task as Task;
 }
 
-
-export async function deleteTask(
-  taskId: number,
-) {
-  const task = await apiFect(`task/delete/${taskId}`, {
+export async function deleteTask(taskId: number) {
+  const task = await apiFect(`task/${taskId}`, {
     method: "DELETE",
-
   });
 
-  return task as taskDelete ;
+  return task as taskDelete;
 }

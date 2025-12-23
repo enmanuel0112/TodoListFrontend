@@ -1,6 +1,8 @@
 import { createContext, useState, useEffect } from "react";
 // import { useNavigate } from "react-router-dom";
 import { getMe } from "../services/users.service";
+import { Spinner } from "../components/Spinner";
+import { signOut } from "../services/auth.service";
 
 type User = {
   createdAt?: string;
@@ -11,7 +13,7 @@ type User = {
   user?: object;
 };
 
-interface ITask {
+interface dataTask {
   taskId: number;
   content: string;
   createdAt: string;
@@ -36,15 +38,23 @@ interface AuthContextProps {
   setTaskUser?: React.Dispatch<React.SetStateAction<GetTask[] | undefined>>;
   openModal: boolean;
   setOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
-  task?: ITask;
-  setTask: React.Dispatch<React.SetStateAction<ITask>>;
+  task?: dataTask;
+  setTask: React.Dispatch<React.SetStateAction<dataTask | undefined>>;
   taskDelete: boolean;
   setTaskDelete: React.Dispatch<React.SetStateAction<boolean>>;
-  taskList: ITask[];
-  setTaskList: React.Dispatch<React.SetStateAction<ITask[]>>;
+  taskList: dataTask[];
+  setTaskList: React.Dispatch<React.SetStateAction<dataTask[]>>;
   login?: (data: User) => void;
   logout?: () => void;
   gettingUser?: () => void;
+  loading?: boolean;
+  openSetting: boolean;
+  setOpenSetting: React.Dispatch<React.SetStateAction<boolean>>;
+  openProfileConfig?: boolean;
+  setOpenProfileConfig?: React.Dispatch<React.SetStateAction<boolean>>;
+  updateUserName?: string;
+  setUpdateUserName?: React.Dispatch<React.SetStateAction<string>>;
+  refreshUser?: () => Promise<void>;
 }
 type ContextProviderProps = {
   children: React.ReactNode;
@@ -59,7 +69,7 @@ const contextComponent: React.Context<AuthContextProps> =
     setTaskUser: () => {},
     openModal: false,
     setOpenModal: () => {},
-    task: {} as ITask,
+    task: {} as dataTask,
     setTask: () => {},
     taskDelete: false,
     setTaskDelete: () => {},
@@ -68,55 +78,67 @@ const contextComponent: React.Context<AuthContextProps> =
     login: () => {},
     logout: () => {},
     gettingUser: () => {},
+    loading: true,
+    openSetting: false,
+    setOpenSetting: () => {},
+    openProfileConfig: false,
+    setOpenProfileConfig: () => {},
+    updateUserName  : "",
+    setUpdateUserName: () => {},
+    refreshUser: async () => {},
   });
 
 export const AuthContext = ({ children }: ContextProviderProps) => {
   const [apiError, setApiError] = useState<string>("");
   const [user, setUser] = useState<User | null>(null);
-  const [task, setTask] = useState<ITask>();
+  const [task, setTask] = useState<dataTask>();
   const [taskUser, setTaskUser] = useState<GetTask[]>();
   const [openModal, setOpenModal] = useState(false);
   const [taskDelete, setTaskDelete] = useState<boolean>(false);
-  const [taskList, setTaskList] = useState<ITask[]>([]);
-  const [loadingSate, setLoadingState] = useState(false);
-  // const navigate = useNavigate();
+  const [taskList, setTaskList] = useState<dataTask[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [openSetting, setOpenSetting] = useState(false);
+  const [openProfileConfig, setOpenProfileConfig] = useState(false);
+  const [updateUserName, setUpdateUserName] = useState<string>("");
 
-  //   const login: (data: User) => void = (data) =>  {
-  // setUser(data);
-  // console.log('esto proviene desde login',data?.user)
-  // if(data?.user?.id){
-  // navigate('/dashboard');
-  // }
-
-  // }
+  const refreshUser = async () => {
+     try {
+        const res = await getMe();
+        setUser(res?.user as User);
+      } catch {
+        setUser(null);
+      } finally {
+        setLoading(false);
+      }
+  }
 
   useEffect(() => {
     (async () => {
-      try {
-        setLoadingState(true);
-        const res = await getMe();
-        console.log("respuesta api", res?.user);
-        setUser(res?.user as User);
-      } catch (error) {
-        console.log(error);
-      }finally{
-        setLoadingState(false)
-      }
-      
+     await refreshUser();
     })();
-  }, []);
+  }, [user]);
 
-  const logout = () => {
-    setUser({});
-    // navigate("login");
+  const logout = async () => {
+    const logoutUser = await signOut();
+  setUser(null);
+    if (loading) {
+      return (
+        <>
+          <Spinner />
+        </>
+      );
+    
+    }
+
+    return logoutUser;
   };
 
-  if (loadingSate) {
+  if (loading) {
     return (
-      <div>
-        Loading....
-      </div>
-    )
+      <>
+        <Spinner />
+      </>
+    );
   }
 
   return (
@@ -137,6 +159,14 @@ export const AuthContext = ({ children }: ContextProviderProps) => {
         taskList,
         setTaskList,
         logout,
+        loading,
+        openSetting,
+        setOpenSetting,
+        openProfileConfig,
+        setOpenProfileConfig,
+        updateUserName,
+        setUpdateUserName,
+        refreshUser,
       }}
     >
       {children}

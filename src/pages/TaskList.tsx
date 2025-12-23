@@ -3,7 +3,8 @@ import contextComponent from "../context/AuthContext";
 import { ButtonDelete, ButtonUpdate } from "../components/Button";
 import { TaskEdit } from "./TaskEdit";
 import { checkTask } from "../services/tasks.service";
-interface ITask {
+
+interface dataTask {
   taskId: number;
   content: string;
   createdAt: string;
@@ -13,9 +14,11 @@ interface ITask {
 
 export const TaskList = () => {
   const { task, openModal, taskList } = useContext(contextComponent);
-  const [completed, setCompleted] = useState<boolean>(task?.isCompleted || false);
+  const [completed, setCompleted] = useState<boolean>(
+    task?.isCompleted || false
+  );
 
-  const handleInput = async (task: ITask) => {
+  const handleInput = async (task: dataTask) => {
     const next = !task?.isCompleted;
     setCompleted(next);
     await checkTask(task?.taskId, completed);
@@ -24,7 +27,7 @@ export const TaskList = () => {
   return (
     <>
       <ul className="flex flex-col  gap-9 m-auto w-[100%] ">
-        {taskList.map((task: ITask) => (
+        {taskList.map((task: dataTask) => (
           <div
             key={task?.taskId}
             className="bg-green p-4 rounded-[20px] w-auto flex justify-between content-center"
@@ -54,14 +57,9 @@ export const TaskList = () => {
           className={`fixed top-0 left-0 w-full h-full
           bg-green/50 flex justify-center items-center 
           transition-all duration-300 ease-in-out
-          ${
-            openModal
-              ? "opacity-100 translate-y-0"
-              : "opacity-0 translate-y-4 pointer-events-none"
-          } 
           `}
         >
-          <TaskEdit task={task} />
+          <TaskEdit task={task as dataTask} />
         </div>
       )}
     </>

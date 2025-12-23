@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { signIn } from "../services/auth.service";
 import { useForm } from "react-hook-form";
 import type { SubmitHandler } from "react-hook-form";
@@ -6,11 +6,14 @@ import { Header } from "../components/layout/Header";
 import { MdEmail } from "react-icons/md";
 import { RiLockPasswordFill } from "react-icons/ri";
 import { Spinner } from "../components/Spinner";
-import {useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import contextComponent from "../context/AuthContext";
 export const SignIn = () => {
   const [loading, setLoading] = useState(false);
   const [errorHook, setErrorHook] = useState<string | null>("");
   const navigate = useNavigate();
+  const {refreshUser} = useContext(contextComponent);
+
   type FormValues = {
     error?: void;
     email: string;
@@ -20,16 +23,16 @@ export const SignIn = () => {
     register,
     handleSubmit,
     // setError,
-    formState: { errors }
+    formState: { errors },
   } = useForm<FormValues>();
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
-    
     try {
       setLoading(true);
       const authUser = await signIn(data.email, data.password);
-      if(authUser?.userInfo) {
-        navigate('/dashboard')
+      if (authUser?.userInfo) {
+        navigate("/dashboard");
+        await refreshUser?.();
       }
     } catch (error) {
       let apiError = "";
@@ -43,11 +46,10 @@ export const SignIn = () => {
   };
 
 
-
   return (
     <>
       <Header />
-  
+
       {loading && <Spinner />}
 
       <div
