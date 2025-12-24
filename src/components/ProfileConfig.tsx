@@ -2,7 +2,7 @@ import { useContext } from "react";
 import contextComponent from "../context/AuthContext";
 import { useForm } from "react-hook-form";
 import { editProfile } from "../services/users.service";
-import { signOut } from "../services/auth.service";
+import { useNavigate } from "react-router-dom";
 
 interface ProfileEditForm {
   username: string;
@@ -10,7 +10,10 @@ interface ProfileEditForm {
 }
 
 export const ProfileConfig = () => {
-  const { openSetting, setOpenProfileConfig } = useContext(contextComponent);
+  const { openSetting, setOpenProfileConfig, logout } =
+    useContext(contextComponent);
+  const navigate = useNavigate();
+
   return (
     openSetting && (
       <>
@@ -27,8 +30,9 @@ export const ProfileConfig = () => {
           </button>
           <button
             className="cursor-pointer hover:text-green"
-            onClick={() => {
-              signOut();
+            onClick={async () => {
+              await logout?.();
+              navigate("/login");
             }}
           >
             Logout

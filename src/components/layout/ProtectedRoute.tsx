@@ -1,11 +1,11 @@
-import { Outlet, Navigate } from "react-router-dom";
+import { Outlet, Navigate, useLocation } from "react-router-dom";
 import { Spinner } from "../Spinner";
 import { useContext } from "react";
 import contextComponent from "../../context/AuthContext";
 
 export const ProtedRouter = () => {
   const { user, loading } = useContext(contextComponent);
-
+  const location = useLocation();
   if (loading) {
     return (
       <>
@@ -13,11 +13,9 @@ export const ProtedRouter = () => {
       </>
     );
   }
-  console.log("este es antes de que verifique", user);
-
   if (!user) {
-    return <Navigate to="/login" replace />;
+    return <Navigate to="/login" replace state={{ from: location }} />;
   }
-  console.log("este es despues que hace la verificacion", user);
+
   return <Outlet />;
 };

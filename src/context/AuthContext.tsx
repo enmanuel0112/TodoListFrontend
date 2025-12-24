@@ -1,5 +1,5 @@
 import { createContext, useState, useEffect } from "react";
-// import { useNavigate } from "react-router-dom";
+
 import { getMe } from "../services/users.service";
 import { Spinner } from "../components/Spinner";
 import { signOut } from "../services/auth.service";
@@ -83,7 +83,7 @@ const contextComponent: React.Context<AuthContextProps> =
     setOpenSetting: () => {},
     openProfileConfig: false,
     setOpenProfileConfig: () => {},
-    updateUserName  : "",
+    updateUserName: "",
     setUpdateUserName: () => {},
     refreshUser: async () => {},
   });
@@ -102,32 +102,32 @@ export const AuthContext = ({ children }: ContextProviderProps) => {
   const [updateUserName, setUpdateUserName] = useState<string>("");
 
   const refreshUser = async () => {
-     try {
-        const res = await getMe();
-        setUser(res?.user as User);
-      } catch {
-        setUser(null);
-      } finally {
-        setLoading(false);
-      }
-  }
+    setLoading(true);
+    try {
+      const res = await getMe();
+      setUser(res?.user as User);
+    } catch {
+      setUser(null);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     (async () => {
-     await refreshUser();
+      await refreshUser();
     })();
-  }, [user]);
+  }, []);
 
   const logout = async () => {
     const logoutUser = await signOut();
-  setUser(null);
+    setUser(null);
     if (loading) {
       return (
         <>
           <Spinner />
         </>
       );
-    
     }
 
     return logoutUser;

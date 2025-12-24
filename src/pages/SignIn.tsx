@@ -12,7 +12,7 @@ export const SignIn = () => {
   const [loading, setLoading] = useState(false);
   const [errorHook, setErrorHook] = useState<string | null>("");
   const navigate = useNavigate();
-  const {refreshUser} = useContext(contextComponent);
+  const { refreshUser } = useContext(contextComponent);
 
   type FormValues = {
     error?: void;
@@ -44,7 +44,6 @@ export const SignIn = () => {
       setLoading(false);
     }
   };
-
 
   return (
     <>
