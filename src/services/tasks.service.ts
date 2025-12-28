@@ -18,6 +18,12 @@ interface userTask {
 type CheckTask = {
   isCompleted: boolean;
 };
+interface Pagination {
+  data: [];
+  pages: number;
+  total: number;
+  totalPages: number;
+}
 
 export async function createTask(content: string) {
   const create = await apiFect("task", {
@@ -28,13 +34,13 @@ export async function createTask(content: string) {
   return create;
 }
 
-export async function getTask() {
-  const task = await apiFect("task/?page=1&limit=5", { method: "GET" });
-  return task as Task[];
+export async function getTask(currentPage: number) {
+  const task = await apiFect(`task/?page=${currentPage}&limit=3`, { method: "GET" });
+  return task as Pagination;
 }
 
 export async function checkTask(taskId: number, isCompleted: boolean) {
-  const task = await apiFect(`task/edit/${taskId}`, {
+  const task = await apiFect(`task/${taskId}`, {
     method: "PUT",
     body: JSON.stringify({ isCompleted }),
   });

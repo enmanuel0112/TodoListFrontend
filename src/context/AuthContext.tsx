@@ -48,6 +48,7 @@ interface AuthContextProps {
   logout?: () => void;
   gettingUser?: () => void;
   loading?: boolean;
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   openSetting: boolean;
   setOpenSetting: React.Dispatch<React.SetStateAction<boolean>>;
   openProfileConfig?: boolean;
@@ -79,6 +80,7 @@ const contextComponent: React.Context<AuthContextProps> =
     logout: () => {},
     gettingUser: () => {},
     loading: true,
+    setLoading: () => {},
     openSetting: false,
     setOpenSetting: () => {},
     openProfileConfig: false,
@@ -106,6 +108,7 @@ export const AuthContext = ({ children }: ContextProviderProps) => {
     try {
       const res = await getMe();
       setUser(res?.user as User);
+      console.log("User refreshed:", res?.user);
     } catch {
       setUser(null);
     } finally {
@@ -117,10 +120,11 @@ export const AuthContext = ({ children }: ContextProviderProps) => {
     (async () => {
       await refreshUser();
     })();
-  }, []);
+  }, [updateUserName]);
 
   const logout = async () => {
     const logoutUser = await signOut();
+    setOpenSetting(false);
     setUser(null);
     if (loading) {
       return (
@@ -160,6 +164,7 @@ export const AuthContext = ({ children }: ContextProviderProps) => {
         setTaskList,
         logout,
         loading,
+        setLoading,
         openSetting,
         setOpenSetting,
         openProfileConfig,

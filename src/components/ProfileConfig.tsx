@@ -49,14 +49,11 @@ export const ProfileEdit = () => {
   const { register, handleSubmit } = useForm<ProfileEditForm>();
   const { openProfileConfig, setOpenProfileConfig, setUpdateUserName } =
     useContext(contextComponent);
-  const onSubmit = (data: ProfileEditForm) => {
+  const onSubmit = async (data: ProfileEditForm) => {
     try {
-      const updateProfile = editProfile(data.username, data.email);
+      await editProfile(data.username, data.email);
       setUpdateUserName?.(data.username);
       setOpenProfileConfig?.(false);
-      if (!updateProfile) {
-        throw new Error("Profile not updated");
-      }
     } catch (error) {
       if (error instanceof Error) {
         console.log("Error updating profile:", error.message);

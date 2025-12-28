@@ -1,39 +1,46 @@
-import { useEffect, useContext } from "react";
+import { useEffect, useContext, useState } from "react";
 import contextComponent from "../context/AuthContext";
 import { getTask } from "../services/tasks.service";
 
 import { useNavigate } from "react-router-dom";
 import { TaskList } from "./TaskList";
 import { Header } from "../components/layout/Header";
+
+interface Pagination {
+  data: [];
+  pages: number;
+  total: number;
+  totalPages: number;
+}
 export const DashBoard = () => {
   const { openModal, taskDelete, setTaskList, taskList } =
     useContext(contextComponent);
-  // const [loading, setLoading] = useState<boolean>(false);
+  const [pagination, setPagination] = useState<Pagination | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+
   const navegate = useNavigate();
 
   const createTaskNavegate = () => {
     navegate("/task/create");
   };
-  
+
   useEffect(() => {
-    // setLoading(true);
     async function fecthData() {
       try {
-        const taskResult = await getTask();
+        const taskResult = await getTask(currentPage);
         setTaskList(taskResult?.data);
+        setPagination(taskResult);
       } catch (error) {
         console.log(error);
-      } finally {
-        // setLoading(false);
       }
     }
 
     fecthData();
-  }, [openModal, taskDelete, setTaskList]);
-
+  }, [openModal, taskDelete, setTaskList, currentPage]);
+  console.log("pagination", pagination);
   return (
     <>
-    <Header />
+      <Header />
 
       {/* Main Content */}
       <div className="flex flex-col w-[80%] h-full my-[5rem]  m-auto">
@@ -48,7 +55,6 @@ export const DashBoard = () => {
           >
             Create Task
           </button>
-          {/* <div className="">{loading && <Spinner />}</div> */}
         </div>
 
         {taskList.length ? (
@@ -63,6 +69,26 @@ export const DashBoard = () => {
             No tasks yet
           </h2>
         )}
+        <div className="flex gap-4 m-auto mt-10">
+          {pagination &&
+            Array.from({ length: pagination.totalPages }, (_, index) => (
+              <button
+                key={index}
+                onClick={() => setCurrentPage(index + 1)}
+                className={`
+                  w-12 h-12
+                  flex items-center justify-center
+                  rounded-full
+                  font-bold
+                  transition-all duration-300 ease-in-out
+                   cursor-pointer
+                   ${currentPage === index + 1
+                       ? "bg-green text-white scale-110"
+                       : "bg-bgApp hover:bg-green hover:text-white"}`} >
+                {index + 1}
+              </button>
+            ))}
+        </div>
       </div>
     </>
   );

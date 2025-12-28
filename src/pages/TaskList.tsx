@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import contextComponent from "../context/AuthContext";
 import { ButtonDelete, ButtonUpdate } from "../components/Button";
 import { TaskEdit } from "./TaskEdit";
@@ -13,15 +13,13 @@ interface dataTask {
 }
 
 export const TaskList = () => {
-  const { task, openModal, taskList } = useContext(contextComponent);
-  const [completed, setCompleted] = useState<boolean>(
-    task?.isCompleted || false
-  );
+  const { task, openModal, taskList, setTaskList } = useContext(contextComponent);
 
-  const handleInput = async (task: dataTask) => {
-    const next = !task?.isCompleted;
-    setCompleted(next);
-    await checkTask(task?.taskId, completed);
+  const handleInput = async (task: dataTask, isChecked: boolean) => {
+    await checkTask(task?.taskId, isChecked)
+     setTaskList((prev) =>
+    prev.map((t) => (t.taskId === task.taskId ? { ...t, isCompleted: isChecked } : t))
+  );
   };
 
   return (
@@ -35,11 +33,12 @@ export const TaskList = () => {
             <div className="flex gap-6 min-w-0 ">
               <input
                 type="checkbox"
-                onChange={() => handleInput(task)}
+                checked={task?.isCompleted}
+                onChange={(e) => handleInput(task, e.target.checked)}
                 className="w-[30px] cursor-pointer"
               ></input>
 
-              <li className="text-start uppercase w-[80%] break-words p-4 text-white">
+              <li className={task?.isCompleted ? "line-through text-gray-500 uppercase  w-[80%] break-words p-4" : "text-start uppercase w-[80%] break-words p-4 text-white"}>
                 {task?.content}
               </li>
             </div>
