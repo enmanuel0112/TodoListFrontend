@@ -6,8 +6,6 @@ import { TaskCreate } from "../pages/TaskCreate";
 import { TaskEdit } from "../pages/TaskEdit";
 import { DashBoard } from "../pages/dashboard";
 import { ProtedRouter } from "../components/layout/ProtectedRoute";
-
-// import { ProtedRouter } from "../components/layout/ProtectedRoute";
 export const RoutesComponent = () => {
   return (
     <Routes>

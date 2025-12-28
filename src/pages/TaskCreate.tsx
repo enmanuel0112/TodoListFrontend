@@ -22,6 +22,7 @@ export const TaskCreate = () => {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<FormValues>();
   const [errorInput, setErrorInput] = useState<string | null>("");
@@ -37,6 +38,7 @@ export const TaskCreate = () => {
     try {
       const task = (await createTask(data.content)) as IUpdateTask;
       setMessageSucess(task.message);
+      reset();
       if (task) {
         setTimeout(() => {
           setMessageSucess("");
@@ -53,48 +55,64 @@ export const TaskCreate = () => {
     <>
       <Header />
 
-      <div>
-        <h1 className="text-center text-4xl mt-6">
-          Welcome to <span className="text-green">"{user?.userName}"</span>{" "}
-        </h1>
+      <div className="flex justify-center px-4 sm:px-6 lg:px-8 py-10 sm:py-16">
+        <form
+          action=""
+          onSubmit={handleSubmit(onSubmit)}
+          className="flex w-full max-w-4xl"
+        >
+          <div className="flex flex-col w-full items-center gap-8 md:gap-10 p-6 sm:p-8 lg:p-10 border-2 border-bgApp rounded-2xl shadow-sm">
+            <div className="flex flex-col  md:flex-col md:items-center md:justify-between w-full gap-6 md:gap-8">
+              <h1 className="w-full md:w-auto text-center md:text-left    sm:text-3xl lg:text-2xl">
+                Hi
+                <span className="text-green ml-3  sm:ml-5">
+                  "{user?.userName}"
+                </span>{" "}
+              </h1>
+              <label className="flex flex-col gap-2 w-full">
+                <input
+                  type="text"
+                  className="input w-full min-w-0"
+                  {...register("content", {
+                    required: true,
+                  })}
+                />
+                {errors.content ? (
+                  <span className="text-red-500 gap-0">
+                    This field is required
+                  </span>
+                ) : (
+                  <span className="text-red-500 gap-0  ">{errorInput} </span>
+                )}
+              </label>
+            </div>
+
+            <div className="flex flex-col sm:flex-row w-full gap-3 sm:gap-4 sm:justify-center">
+              <button className="btn w-full sm:w-auto">Create task</button>
+              <button
+                type="button"
+                className="btn w-full sm:w-auto"
+                onClick={() => {
+                  viewTaskNavegate();
+                }}
+              >
+                View Task
+              </button>
+            </div>
+          </div>
+        </form>
       </div>
 
-      <form
-        action=""
-        onSubmit={handleSubmit(onSubmit)}
-        className="flex flex-col h-full"
-      >
+      {messageSucess && (
         <div
-          className="flex flex-col h-full
-         items-center justify-center m-auto gap-[3rem]"
+          className="fixed top-4 right-4
+         bg-green text-white px-4 py-2 rounded-md shadow-md
+         
+         "
         >
-          <label htmlFor="" className="flex flex-col gap-2">
-            <input
-              type="text"
-              className="input w-[500px]"
-              {...register("content", {
-                required: true,
-              })}
-            />
-            {errors.content ? (
-              <span className="text-red-500 gap-0">This field is required</span>
-            ) : (
-              <span className="text-red-500 gap-0  ">{errorInput} </span>
-            )}
-          </label>
-
-          <button className="btn">Create task</button>
-          <button
-            className="btn"
-            onClick={() => {
-              viewTaskNavegate();
-            }}
-          >
-            View Task
-          </button>
+          {messageSucess}
         </div>
-      </form>
-      {<p className="text-green gap-0 m-auto  ">{messageSucess}</p>}
+      )}
     </>
   );
 };

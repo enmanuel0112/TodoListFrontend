@@ -24,30 +24,36 @@ export const TaskList = () => {
 
   return (
     <>
-      <ul className="flex flex-col  gap-9 m-auto w-[100%] ">
+      <ul className="flex flex-col gap-6 sm:gap-8 w-full max-w-4xl mx-auto px-4 sm:px-0 list-none">
         {taskList.map((task: dataTask) => (
-          <div
+          <li
             key={task?.taskId}
-            className="bg-green p-4 rounded-[20px] w-auto flex justify-between content-center"
+            className="bg-green p-4 sm:p-5 rounded-[20px] w-full flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6"
           >
-            <div className="flex gap-6 min-w-0 ">
+            <div className="flex flex-1 items-start gap-3 sm:gap-4 min-w-0">
               <input
                 type="checkbox"
                 checked={task?.isCompleted}
                 onChange={(e) => handleInput(task, e.target.checked)}
-                className="w-[30px] cursor-pointer"
-              ></input>
+                className="h-6 w-6 sm:h-7 sm:w-7 cursor-pointer mt-1 sm:mt-0 shrink-0"
+              />
 
-              <li className={task?.isCompleted ? "line-through text-gray-500 uppercase  w-[80%] break-words p-4" : "text-start uppercase w-[80%] break-words p-4 text-white"}>
+              <p
+                className={
+                  task?.isCompleted
+                    ? "flex-1 line-through text-gray-200 uppercase break-words p-2 sm:p-3"
+                    : "flex-1 text-start uppercase break-words p-2 sm:p-3 text-white"
+                }
+              >
                 {task?.content}
-              </li>
+              </p>
             </div>
 
-            <div className="flex gap-2 shrink-0">
+            <div className="flex w-full sm:w-auto gap-2 sm:gap-3 justify-end sm:justify-center">
               <ButtonDelete task={task} />
               <ButtonUpdate task={task} />
             </div>
-          </div>
+          </li>
         ))}
       </ul>
 

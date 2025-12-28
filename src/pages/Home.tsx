@@ -32,23 +32,21 @@ const CardTask = () => {
   }
   return (
     <>
-      <div
-        className="flex gap-20 flex-col justify-center items-center
-       mx-auto   w-[80%] h-[90vh]  "
-      >
+      <div className="flex flex-col items-center justify-center gap-10 sm:gap-14 w-full max-w-5xl mx-auto min-h-[70vh] px-4 sm:px-6 lg:px-8 py-12">
         <img
           src={gifHomePage}
           alt="home page gif"
-          className="w-auto h-[500px] items-center 
-          rounded-[12px] drop-shadow-2xl"
+          className="w-full max-w-4xl h-[400px] max-h-[320px] sm:max-h-[420px] lg:max-h-[520px] object-contain rounded-[12px] drop-shadow-2xl"
         />
 
-        <Button
-          name="Add Task"
-          onclick={() => {
-            handleClick();
-          }}
-        />
+        <div className="w-full sm:w-auto">
+          <Button
+            name="Add Task"
+            onclick={() => {
+              handleClick();
+            }}
+          />
+        </div>
       </div>
     </>
   );

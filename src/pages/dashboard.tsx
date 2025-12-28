@@ -1,7 +1,6 @@
 import { useEffect, useContext, useState } from "react";
 import contextComponent from "../context/AuthContext";
 import { getTask } from "../services/tasks.service";
-
 import { useNavigate } from "react-router-dom";
 import { TaskList } from "./TaskList";
 import { Header } from "../components/layout/Header";
@@ -38,17 +37,39 @@ export const DashBoard = () => {
     fecthData();
   }, [openModal, taskDelete, setTaskList, currentPage]);
   console.log("pagination", pagination);
+
+  const getDisplayedPages = () => {
+    if (!pagination) return [];
+    const total = pagination.totalPages;
+    if (total <= 7) {
+      return Array.from({ length: total }, (_, i) => i + 1);
+    }
+
+    const pages: (number | "...")[] = [1];
+    const start = Math.max(2, currentPage - 1);
+    const end = Math.min(total - 1, currentPage + 1);
+
+    if (start > 2) pages.push("...");
+
+    for (let i = start; i <= end; i++) {
+      pages.push(i);
+    }
+
+    if (end < total - 1) pages.push("...");
+
+    pages.push(total);
+    return pages;
+  };
+
   return (
     <>
       <Header />
 
       {/* Main Content */}
-      <div className="flex flex-col w-[80%] h-full my-[5rem]  m-auto">
-        <div className="ml-auto my-5 w-full">
+      <div className="flex flex-col w-full max-w-5xl h-full my-12 sm:my-16 mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex w-full justify-end my-5">
           <button
-            className="bg-bgApp p-3 rounded-3xl
-            hover:text-green cursor-pointer transition-all 
-            duration-300 ease-in-out font-bold  "
+            className="bg-bgApp px-4 py-3 rounded-3xl hover:text-green cursor-pointer transition-all duration-300 ease-in-out font-bold w-full sm:w-auto text-center"
             onClick={() => {
               createTaskNavegate();
             }}
@@ -69,25 +90,33 @@ export const DashBoard = () => {
             No tasks yet
           </h2>
         )}
-        <div className="flex gap-4 m-auto mt-10">
-          {pagination &&
-            Array.from({ length: pagination.totalPages }, (_, index) => (
+        <div className="flex flex-wrap justify-center gap-3 sm:gap-4 mt-8 sm:mt-10 w-full px-2 ">
+          {getDisplayedPages().map((page, idx) =>
+            page === "..." ? (
+              <span
+                key={`ellipsis-${idx}`}
+                className="w-10 h-10 sm:w-11 sm:h-11 md:w-12 md:h-12 flex items-center justify-center text-mainText font-bold"
+              >
+                ...
+              </span>
+            ) : (
               <button
-                key={index}
-                onClick={() => setCurrentPage(index + 1)}
+                key={page}
+                onClick={() => setCurrentPage(page)}
                 className={`
-                  w-12 h-12
+                  w-10 h-10 sm:w-11 sm:h-11 md:w-12 md:h-12
                   flex items-center justify-center
                   rounded-full
                   font-bold
                   transition-all duration-300 ease-in-out
                    cursor-pointer
-                   ${currentPage === index + 1
+                   ${currentPage === page
                        ? "bg-green text-white scale-110"
                        : "bg-bgApp hover:bg-green hover:text-white"}`} >
-                {index + 1}
+                {page}
               </button>
-            ))}
+            )
+          )}
         </div>
       </div>
     </>

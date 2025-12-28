@@ -51,17 +51,8 @@ export const SignIn = () => {
 
       {loading && <Spinner />}
 
-      <div
-        className="flex flex-col h-[90vh] justify-center
-       items-center mx-auto"
-      >
-        <div
-          className="flex flex-col gap-8 
-        items-center justify-center mx-auto
-         bg-cardTask p-10 w-[500px] h-auto rounded-[12px]
-         border-green border shadow-lg shadow-lightShadow
-         "
-        >
+      <div className="flex flex-col min-h-screen justify-center items-center px-4 py-12 sm:px-6 lg:px-8">
+        <div className="flex flex-col w-full max-w-md sm:max-w-lg gap-8 items-center justify-center bg-cardTask p-6 sm:p-8 lg:p-10 rounded-[12px] border-green border shadow-lg shadow-lightShadow">
           <h1 className="text-4xl font-semibold">
             Lo
             <span className="text-green">gin</span>
@@ -73,14 +64,17 @@ export const SignIn = () => {
 
           <form
             onSubmit={handleSubmit(onSubmit)}
-            className="flex flex-col gap-8 items-center "
+            className="flex flex-col gap-6 sm:gap-8 items-center w-full"
           >
-            <div>
-              <label htmlFor="" className="flex items-center gap-2 input">
+            <div className="w-full">
+              <label
+                htmlFor=""
+                className="flex items-center gap-2 input w-full"
+              >
                 <input
                   type="email"
                   placeholder="Email"
-                  className="bg-transparent w-[250px] focus:outline-none text-secondaryText"
+                  className="bg-transparent w-full focus:outline-none text-secondaryText"
                   {...register("email", {
                     required: true,
                   })}
@@ -94,12 +88,15 @@ export const SignIn = () => {
               )}
             </div>
 
-            <div>
-              <label htmlFor="" className=" flex items-center gap-2 input">
+            <div className="w-full">
+              <label
+                htmlFor=""
+                className=" flex items-center gap-2 input w-full"
+              >
                 <input
                   type="password"
                   placeholder="Password"
-                  className="bg-transparent w-[250px] focus:outline-none text-secondaryText"
+                  className="bg-transparent w-full focus:outline-none text-secondaryText"
                   {...register("password", {
                     required: true,
                   })}
@@ -113,7 +110,7 @@ export const SignIn = () => {
               )}
             </div>
 
-            <button className="btn" name="Sign In">
+            <button className="btn w-full" name="Sign In">
               sign in
             </button>
           </form>

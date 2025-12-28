@@ -1,69 +1,56 @@
-# React + TypeScript + Vite
+# TodoList (React + TypeScript + Vite)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Responsive task manager with authentication, full CRUD for tasks, pagination, and profile editing.
 
-Currently, two official plugins are available:
+## Screenshots
+Images live in `src/assets/docs-screenshots/`. Previewed below at a smaller width to keep focus on the content:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+<p align="center">
+  <img src="src/assets/docs-screenshots/login.jpeg" alt="Login" width="720" />
+  <img src="src/assets/docs-screenshots/dashboard.jpeg" alt="Dashboard" width="720" />
+  <img src="src/assets/docs-screenshots/edit-task.jpeg" alt="Edit Task" width="720" />
+  <img src="src/assets/docs-screenshots/create-task.jpeg" alt="Create Task" width="720" />
+  <img src="src/assets/docs-screenshots/edit-profile.jpeg" alt="Edit Profile" width="720" />
+</p>
 
-## Expanding the ESLint configuration
+## Features
+- Sign in / sign up with clear error messages and success feedback.
+- Task CRUD: create, list, complete, edit, delete.
+- Compact pagination with ellipsis for long lists.
+- Profile edit (username/email).
+- Fully responsive layout for mobile, tablet, and desktop.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Tech Stack
+- React 19 + TypeScript
+- Vite
+- Tailwind (v4 config)
+- react-hook-form
+- react-router-dom
+- ESLint
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Requirements
+- Node 18+ and npm.
+- Backend running at `http://localhost:4000/api` with endpoints `user/login`, `user/register`, `user/logout`, and task CRUD (see `src/services/api.ts`).
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Setup
+```bash
+npm install
+npm run dev       # dev server
+npm run build     # production build
+npm run preview   # serve built files
+npm run lint      # lint code
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## API Configuration
+`src/services/api.ts` uses `Base_URL = http://localhost:4000/api` and `credentials: "include"` for cookies. Update this URL or move it to env vars if your backend differs.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Key Structure
+- `src/pages/` - main screens (SignIn, SignUp, TaskCreate, TaskList, DashBoard, etc.).
+- `src/components/` - layout, buttons, modals, shared UI.
+- `src/services/` - API integrations (auth, tasks).
+- `src/context/` - global auth/task state.
+- `src/assets/docs-screenshots/` - README screenshots.
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## Notes
+- Forms surface backend validation errors and show success messages on registration.
+- UI containers and controls adapt by breakpoint to preserve readability and spacing on small screens.

@@ -44,8 +44,8 @@ export const TaskEdit = ({ task }: { task: ITask }) => {
   return (
     <>
       <div className="bg-bgApp p-8 rounded-[12px] shadow-lg flex flex-col gap-6 w-[800px]">
-        <div className="flex justify-between items-centerpb-4">
-          <h2 className="text-mainText text-2xl font-medium">Edit Task</h2>
+        <div className="flex justify-between items-centerpb-4 ">
+          <h2 className="text-mainText text-2xl font-medium ">Edit Task</h2>
           <button
             className="text-red-500 text-2xl cursor-pointer"
             onClick={() => setOpenModal(false)}
